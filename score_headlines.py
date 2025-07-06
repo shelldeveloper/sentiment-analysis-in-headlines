@@ -1,12 +1,13 @@
 """This script deploys a model to describe the sentiment of news headlines."""
 
+import sys
+
 # Check if inputs are present
 if len(sys.argv) != 3:
     print("Error: Please provide an input text file and the source of the headline.\n" \
     "Example: python score_headlines.py todaysheadlines.txt nyt")
     sys.exit(1)
 
-import sys
 import numpy as np
 from sentence_transformers import SentenceTransformer
 import joblib
