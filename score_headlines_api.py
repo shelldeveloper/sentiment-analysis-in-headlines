@@ -8,7 +8,8 @@ import joblib
 
 # Load model
 app             = FastAPI()
-model           = SentenceTransformer("/opt/huggingface_models/all-MiniLM-L6-v2")
+# model           = SentenceTransformer("/opt/huggingface_models/all-MiniLM-L6-v2")
+model           = SentenceTransformer("all-MiniLM-L6-v2")
 clf             = joblib.load('svm.joblib')
 
 # GET /status: Health check
@@ -28,7 +29,4 @@ def score_headlines(headline_data: ListOfHeadlines):
     predictions = clf.predict(embeddings)
     return {'labels': predictions.tolist()}
 
-#
-# if __name__ == '__main__':
-#     import uvicorn
-#     uvicorn.run('score_headlines_api:app', host='localhost', port=8021)
+# fastapi dev score_headlines_api.py --port 8021
