@@ -1,0 +1,26 @@
+from fastapi import FastAPI
+from pydantic import BaseModel
+from typing import List
+from sentence_transformers import SentenceTransformer
+import joblib
+
+app             = FastAPI()
+model           = SentenceTransformer("/opt/huggingface_models/all-MiniLM-L6-v2")
+clf             = joblib.load('svm.joblib')
+
+@app.get('/status')
+def status():
+    return {'status':'OK'}
+
+class ListOfHeadlines(BaseModel):
+    headlines: List[str]
+
+@app.post('/score_headlines')
+def score_headlines(headline_data: ListOfHeadlines):
+    embeddings  = model.encode(headline_data.headlines)
+    predictions = clf.predict(embeddings)
+    return {'labels': predictions.tolist()}
+
+if __name__ == '__main__':
+    import uvicorn
+    uvicorn.run('score_headlines_api:app', host='localhost', port=8021)
